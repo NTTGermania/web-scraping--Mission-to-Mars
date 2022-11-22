@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Mission to Mars</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+
+        <div class="jumbotron text-center">
+          <h1>Mission to Mars</h1>
+          <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Get Data About Mars!</a></p>
+        </div>
+    
+        <!-- Display Scraped Data -->
+        <div class="row" id="craiglist-listings">
+          <div class="col-md-12">
+            <!-- Headline and Description -->
+            <h3>Today's Mars News</h3>
+            <h5>{{ mars_data_dict["Mars_News"]}} </h5> 
+            <p> {{mars_data_dict["Mars_Paragraph"]}}</p>
+
+            <!-- Featured Image -->
+            <div class="col-lg-6 border py-2">
+                <h2>Featured Image of Mars</h2>
+                {% with img = mars_data['image'] %}
+                <img src="{{ img }}", alt="picture of mars", class="img-fluid">
+                {% endwith %}
+            </div>
+
+            <!-- Mars Facts -->
+            <h3>Mars Facts</h3>
+            <div>
+                {{mars_data_dict["Mars_Facts"] | safe}}
+            </div>
+            <!-- Mars Hemispheres -->
+            <h3>Mars Hemispheres</h3>
+            {% for hemisphere in mars_data_dict[Mars_Hemispheres] %}
+          <div class="col-md-6">
+            <div class="thumbnail">
+              <img src="{{hemisphere.url}}" />
+              <h3>{{hemisphere.title}}</h3>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+        </div>
+    
+      </div>
+    
+</html>
