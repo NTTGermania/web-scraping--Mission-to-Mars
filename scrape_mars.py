@@ -6,31 +6,33 @@ import time
 
 # Splinter setup as global variables
 executable_path = {"executable_path" : ChromeDriverManager().install()}
-browser = Browser("chrome", **executable_path, headless = False)
+
 
 # Defining a scrape function
-def scrape(startup = False):
+def scrape():
+    browser = Browser("chrome", **executable_path, headless = False)
     # Initalise a dictionary to store all our data from scraping
     mars_data_dict = {}
 
     # Call the scrape functions 
-    try:
-        mars_data_dict["Mars_News"] = mars_ls[0]
-        mars_data_dict["Mars_Paragraph"] = mars_ls[1]
-        mars_data_dict["Mars_Images"] = featured_image_url
-
-        if startup == True:
-            mars_data_dict["Mars_Facts"] = Mars_descr
-            mars_data_dict["Mars_Hemispheres"] = mars_hemisphere_ls
-            # Scrape was successful
-            mars_data_dict["success"] = True
-    except:
-        # Scrape was not successful
-        mars_data_dict["success"] = False
+    mars_news_data = mars_news(browser)
+    
+    mars_data_dict["Mars_News"] = mars_news_data[0]
+    print("mars_news success")
+    mars_data_dict["Mars_Paragraph"] = mars_news_data[1]
+    print("mars_paragraph success")
+    mars_data_dict["Mars_Images"] = mars_images(browser)
+    print("mars_images success")
+    mars_data_dict["Mars_Facts"] = mars_facts(browser)
+    print("mars_facts success")
+    mars_data_dict["Mars_Hemispheres"] = mars_hemispheres(browser)
+    print("mars_hemispheres success")
+    # quit function
+    browser.quit()
     return mars_data_dict
 
 
-def mars_news():
+def mars_news(browser):
     mars_url = "https://redplanetscience.com/"
     browser.visit(mars_url)
     time.sleep(1)
@@ -42,7 +44,7 @@ def mars_news():
     mars_ls = [title_browse, paragraph_browse]
     return mars_ls
 
-def mars_images():
+def mars_images(browser):
     images_url = "https://spaceimages-mars.com/"
     browser.visit(images_url)
     time.sleep(1)
@@ -53,23 +55,20 @@ def mars_images():
     featured_image_url = images_url + img_browse
     return featured_image_url
 
-def mars_facts():
+def mars_facts(browser):
     facts_url = "https://galaxyfacts-mars.com/"
     browser.visit(facts_url)
     time.sleep(1)
-    tables = pd.read_html(facts_url)
-    Mars_info_df = tables[0]
-    Mars_info_df = pd.DataFrame(Mars_info) 
+    tables = pd.read_html(facts_url) 
+    Mars_info_df = pd.DataFrame(tables[0]) 
     Mars_info_df = Mars_info_df.rename(columns = {0 : "Description"})
     Mars_info_df = Mars_info_df.set_index("Description")
     Mars_info_table = Mars_info_df.to_html()
-    Mars_info_table.replace('\n', '')
-    Mars_descr = Mars_info_df.to_html("Mars_info_table.html")
-    return Mars_descr
+    return Mars_info_table
 
-def mars_hemispheres():
+def mars_hemispheres(browser):
     mars_hemisphere_ls = []
-
+    astro_url = "https://marshemispheres.com/"
     for i in range(4):
         browser.visit(astro_url)
         time.sleep(1)
@@ -84,4 +83,3 @@ def mars_hemispheres():
 
     return mars_hemisphere_ls
 
-browser.quit()

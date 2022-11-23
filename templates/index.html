@@ -21,17 +21,18 @@
         </div>
     
         <!-- Display Scraped Data -->
-        <div class="row" id="craiglist-listings">
+        <div class="row" id="mars_data">
           <div class="col-md-12">
+
             <!-- Headline and Description -->
             <h3>Today's Mars News</h3>
-            <h5>{{ mars_data_dict["Mars_News"]}} </h5> 
-            <p> {{mars_data_dict["Mars_Paragraph"]}}</p>
+            <h5>{{mars.Mars_News}}</h5> 
+            <p> {{mars.Mars_Paragraph}}</p>
 
             <!-- Featured Image -->
             <div class="col-lg-6 border py-2">
                 <h2>Featured Image of Mars</h2>
-                {% with img = mars_data['image'] %}
+                {% with img = mars.Mars_Images  %}
                 <img src="{{ img }}", alt="picture of mars", class="img-fluid">
                 {% endwith %}
             </div>
@@ -39,11 +40,12 @@
             <!-- Mars Facts -->
             <h3>Mars Facts</h3>
             <div>
-                {{mars_data_dict["Mars_Facts"] | safe}}
+                {{mars.Mars_Facts | safe}}
             </div>
+
             <!-- Mars Hemispheres -->
             <h3>Mars Hemispheres</h3>
-            {% for hemisphere in mars_data_dict[Mars_Hemispheres] %}
+            {% for hemisphere in mars.Mars_Hemispheres %}
           <div class="col-md-6">
             <div class="thumbnail">
               <img src="{{hemisphere.url}}" />
